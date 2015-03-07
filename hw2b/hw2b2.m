@@ -25,11 +25,11 @@ im2 = im2double(rgb2gray(imread('/home/ed/Downloads/cmu_16662_p2/sensor_data/rig
 
 wp1 = worldPoints1(:,indexPairs(:,1));
 wp2 = worldPoints2(:,indexPairs(:,2));
-[bestT bestI] = ransacRigidT(wp1,wp2,xy1(:,indexPairs(:,1)),xy2(:,indexPairs(:,2)),K,20000,1);
+[bestT bestI] = ransacRigidT(wp1,wp2,xy1(:,indexPairs(:,1)),xy2(:,indexPairs(:,2)),K,2000,1);
 THistory = struct('T',bestT);
 
 
-for i=1:633
+parfor i=1:633
   
     im1 = im2double(rgb2gray(imread(sprintf('/home/ed/Downloads/cmu_16662_p2/sensor_data/left%03d.jpg',i))));
     im2 = im2double(rgb2gray(imread(sprintf('/home/ed/Downloads/cmu_16662_p2/sensor_data/right%03d.jpg',i))));
@@ -45,8 +45,9 @@ for i=1:633
 
     wp1 = worldPoints1(:,indexPairs(:,1));
     wp2 = worldPoints2(:,indexPairs(:,2));
-    [bestT bestI] = ransacRigidT(wp1,wp2,xy1(:,indexPairs(:,1)),xy2(:,indexPairs(:,2)),K,20000,1);
+    [bestT bestI] = ransacRigidT(wp1,wp2,xy1(:,indexPairs(:,1)),xy2(:,indexPairs(:,2)),K,2000,1);
     THistory(i+1) = struct('T',bestT);
+    fprintf('i = %d\n', i);
 end
 
 currentH = eye(4);

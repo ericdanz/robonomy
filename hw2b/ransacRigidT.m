@@ -7,14 +7,20 @@ bestT = [];
 
 for i=1:nIter
 
-    idx = randperm(size(wp1,2),4);
+    idx = randperm(size(wp1,2),3);
     thisInliers = 0;
     [T,Eps] = estimateRigidTransform(wp1(1:3,idx),wp2(1:3,idx));
     P = K*T(1:3,:);
     for j=1:size(wp2,2)
-       guess = P*wp2(:,j);
-       guess = guess/guess(3);
-       guessError = sqrt( (guess(1) - xy2(1,j))^2 + (guess(2) - xy2(2,j))^2 );
+%         
+%        guess = P*wp2(:,j);
+%        guess = guess/guess(3);
+%        guessError = sqrt( (guess(1) - xy2(1,j))^2 + (guess(2) - xy2(2,j))^2 );
+       
+       guess = T*wp2(:,j);
+       guess = guess/guess(4);
+       guessError = sqrt( (guess(1) - wp1(1,j))^2 + (guess(2) - wp1(2,j))^2 + (guess(3) - wp1(3,j))^2 );
+       %pause(.1);
        if guessError < tol
            thisInliers = thisInliers + 1;
        end
