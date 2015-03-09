@@ -26,13 +26,13 @@ end
 R =[1 0 0 0; 0 1 0 0; 0 0 1 0];
 P1 = K*R;
 
-R2 =[1 0 0 .1621; 0 1 0 0; 0 0 1 1];
+R2 =[1 0 0 162.1; 0 1 0 0; 0 0 1 0];
 P2 = K*R2;
 
 
 
-figure;
-hold on;
+%figure;
+% hold on;
 % 
 % plot(pts1(1,:),pts1(2,:),'r*');
 % %     ln = findobj('type','line');
@@ -55,14 +55,14 @@ for i=1:size(pts1,2)
     h = V(:,end);    
     rp = P1*h;
     worldPoints = [worldPoints h/h(4)];
-    plot(pts1(1,i),pts1(2,i),'r*');
-    text(double(pts1(1,i)),double(pts1(2,i)),num2str(i));
+    %plot(pts1(1,i),pts1(2,i),'r*');
+    %text(double(pts1(1,i)),double(pts1(2,i)),num2str(i));
     
-    plot(rp(1)/rp(3),rp(2)/rp(3),'ob');
+    %plot(rp(1)/rp(3),rp(2)/rp(3),'ob');
     
     
 end
-hold off;
+%hold off;
 
 %hold on;
 %figure ;plot3(worldPoints(1,:),worldPoints(2,:),worldPoints(3,:),'.g');

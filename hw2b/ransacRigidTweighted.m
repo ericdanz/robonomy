@@ -1,4 +1,4 @@
-function [bestT, bestInliers] = ransacRigidT(wp1,wp2,xy1,xy2,K,nIter,tol)
+function [bestT, bestInliers] = ransacRigidTweighted(wp1,wp2,xy1,xy2,K,nIter,tol)
 P1 = K*[1 0 0 0; 0 1 0 0; 0 0 1 0];    
 bestInliers = 0;
 bestP = [];
@@ -22,16 +22,14 @@ for i=1:nIter
        guess = T*wp2(:,j);
        guess = guess/guess(4);
        guessError = sqrt( (guess(1) - wp1(1,j))^2 + (guess(2) - wp1(2,j))^2 + (guess(3) - wp1(3,j))^2 );
-	tError = sqrt( (T(1,4)^2 + T(2,4)^2 + T(3,4)^2  ));
-
        %pause(.1);
        if guessError < tol
            thisInliers = thisInliers + 1;
-           thisError = thisError + guessError + tError;
+           thisError = thisError + guessError;
        end
     end
-    thisError = thisError / thisInliers;
-    if (thisInliers > bestInliers || (thisInliers > bestInliers-round(bestInliers/3) && bestError > thisError))
+    distanceVal = thisError / thisInliers;
+    if (thisInliers > bestInliers || (thisInliers == bestInliers && bestError > thisError))
         bestInliers = thisInliers;
         bestT = T;
         bestError = thisError;
@@ -45,7 +43,7 @@ for i=1:size(xy1,2)
     rp = rp/rp(3);
     
 %     plot(xy2(1,i),xy2(2,i),'r*');
-%    text(double(xy2(1,i)),double(xy2(2,i)),num2str(i));
+    text(double(xy2(1,i)),double(xy2(2,i)),num2str(i));
     
 %     plot(rp(1),rp(2),'ob');
 end

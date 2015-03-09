@@ -60,6 +60,7 @@ for ii=1:pointCount
     B = B + A(:,:,ii)' * A(:,:,ii);
 end
 
+if (~sum(isnan(B(:))) && ~sum(isinf(B(:))))
 [~, S, V] = svd(B);
 quat = V(:,4);
 rot = quat2rot(quat);
@@ -70,6 +71,10 @@ T3 = [eye(3,3), x_centroid ;  0 0 0 1];
 
 T = T3 * T2 * T1;
 Eps = S(4,4);
+else
+T = eye(4);
+Eps = -1;
+end
 
                     
                     
