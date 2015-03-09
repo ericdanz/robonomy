@@ -3,8 +3,9 @@ P1 = K*[1 0 0 0; 0 1 0 0; 0 0 1 0];
 bestInliers = 0;
 bestP = [];
 bestR = [];
-bestT = [];
+bestT = eye(4);
 bestError = 0;
+bestRatio = 0;
 bestFeatures = [];
 bestSP = [];
 bestWP = [];
@@ -60,7 +61,7 @@ end
 
 %update translation for the ratio
 t = bestT(1:3,4)
-if ~sum(isinf(mean(bestRatio))) && t(1)~=0
+if ~sum(isinf(mean(bestRatio)))&& mean(bestRatio) && t(1)~=0
     mean(bestRatio)
     
     t = t*((162.1*mean(bestRatio))/t(1));
