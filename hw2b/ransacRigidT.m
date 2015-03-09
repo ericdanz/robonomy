@@ -15,6 +15,7 @@ for i=1:nIter
     thisInliers = 0;
     thisError = 0;
     [T,Eps] = estimateRigidTransform(wp1(1:3,idx),wp2(1:3,idx));
+    T = T/T(4,4);
     P = K*T(1:3,:);
     inFeatures = [];
     inSP = [];
@@ -30,8 +31,9 @@ for i=1:nIter
        guess = T*wp2(:,j);
        guess = guess/guess(4);
        guessError = sqrt( (guess(1) - wp1(1,j))^2 + (guess(2) - wp1(2,j))^2 + (guess(3) - wp1(3,j))^2 );
+       tDist = sqrt( T(1,4)^2 + T(2,4)^2 + T(3,4)^2 );
        %pause(.1);
-       if guessError < tol
+       if guessError < tol && tDist < 100
            thisInliers = thisInliers + 1;
            thisError = thisError + guessError;
            %inFeatures(end+1) = features1(j);
@@ -45,7 +47,7 @@ for i=1:nIter
     distanceVal = thisError / thisInliers;
     if (thisInliers > bestInliers || (thisInliers == bestInliers && bestError > thisError))
         bestInliers = thisInliers;
-        bestT = T/T(4,4);
+        bestT = T;
         bestError = thisError;
         bestFeatures = inFeatures;
         bestSP = inSP;

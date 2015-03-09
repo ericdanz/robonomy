@@ -74,7 +74,7 @@ points(3,:) = points(3,:)./points(4,:);
 save('output.mat','THistory','points');
 
 figure; hold on;
-plot3(points(1,:),points(2,:),points(3,:));
+plot3(points(1,:),points(2,:),points(3,:),'b--o');
 hold off;
 
 % matlabpool close;
