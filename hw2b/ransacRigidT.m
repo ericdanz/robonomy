@@ -45,7 +45,7 @@ for i=1:nIter
     distanceVal = thisError / thisInliers;
     if (thisInliers > bestInliers || (thisInliers == bestInliers && bestError > thisError))
         bestInliers = thisInliers;
-        bestT = T;
+        bestT = T/T(4,4);
         bestError = thisError;
         bestFeatures = inFeatures;
         bestSP = inSP;
@@ -58,8 +58,9 @@ end
 
 %update translation for the ratio
 t = bestT(1:3,4)
-if mean(bestRatio) && t(1)
+if ~sum(isinf(mean(bestRatio))) && t(1)~=0
     mean(bestRatio)
+    
     t = t*((162.1*mean(bestRatio))/t(1));
 else
     t = t*0;

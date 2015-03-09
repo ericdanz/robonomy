@@ -27,7 +27,7 @@ wp1 = worldPoints1(:,indexPairs(:,1));
 wp2 = worldPoints2(:,indexPairs(:,2));
 [bestT bestI] = ransacRigidT(wp1,wp2,xy1(:,indexPairs(:,1)),xy2(:,indexPairs(:,2)),sp1,sp2,K,2000,40);
 THistory = struct('T',bestT);
-matlabpool open 2
+% matlabpool open 2
 
 parfor i=1:120
   
@@ -64,11 +64,12 @@ for i=1:length(THistory)
     %pause(01);
     newT = [THistory(i).T(:,1:3) t]
     currentH = newT*currentH;
-    points = [points currentH*[0;0;0;1]]
+    points = [points currentH*[0;0;0;1]];
 end
-% points(1,:) = points(1,:)./points(4,:);
-% points(2,:) = points(2,:)./points(4,:);
-% points(3,:) = points(3,:)./points(4,:);
+
+points(1,:) = points(1,:)./points(4,:);
+points(2,:) = points(2,:)./points(4,:);
+points(3,:) = points(3,:)./points(4,:);
 
 save('output.mat','THistory','points');
 
@@ -76,6 +77,6 @@ figure; hold on;
 plot3(points(1,:),points(2,:),points(3,:));
 hold off;
 
-matlabpool close;
+% matlabpool close;
 
 
