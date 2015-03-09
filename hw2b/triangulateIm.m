@@ -1,4 +1,4 @@
-function [worldPoints,matchedFeatures,pts1] = triangulateIm(im1,im2,K)
+function [worldPoints,matchedFeatures,pts1,sp1] = triangulateIm(im1,im2,K)
 Features1 = detectSURFFeatures(im1);
 Features2 = detectSURFFeatures(im2);
 
@@ -9,6 +9,10 @@ Features2 = detectSURFFeatures(im2);
 
 matchedPoints1 = valid_points1(indexPairs(:, 1), :);
 matchedPoints2 = valid_points2(indexPairs(:, 2), :);
+
+
+%figure; showMatchedFeatures(im1, im2, matchedPoints1, matchedPoints2);
+
 matchedFeatures = features1(indexPairs(:,1),:);
 
 pts1 = [];
@@ -55,6 +59,7 @@ for i=1:size(pts1,2)
     h = V(:,end);    
     rp = P1*h;
     worldPoints = [worldPoints h/h(4)];
+    sp1 = pts2(1:3,:) - pts1(1:3,:);
     %plot(pts1(1,i),pts1(2,i),'r*');
     %text(double(pts1(1,i)),double(pts1(2,i)),num2str(i));
     

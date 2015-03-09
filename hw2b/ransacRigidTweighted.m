@@ -1,11 +1,14 @@
-function [bestT, bestInliers] = ransacRigidTweighted(wp1,wp2,xy1,xy2,K,nIter,tol)
+function [bestT, bestInliers] = ransacRigidTweighted(wp1,wp2,xy1,xy2,features1,features2,sp1,sp2,K,nIter,tol)
 P1 = K*[1 0 0 0; 0 1 0 0; 0 0 1 0];    
 bestInliers = 0;
 bestP = [];
 bestR = [];
 bestT = [];
 bestError = 0;
-
+bestFeatures = [];
+bestSP = [];
+bestWP = [];
+bestXY = [];
 for i=1:nIter
 
     idx = randperm(size(wp1,2),3);
@@ -13,6 +16,10 @@ for i=1:nIter
     thisError = 0;
     [T,Eps] = estimateRigidTransform(wp1(1:3,idx),wp2(1:3,idx));
     P = K*T(1:3,:);
+    inFeatures = [];
+    inSP = [];
+    inWP = [];
+    inXY = [];
     for j=1:size(wp2,2)
 %         
 %        guess = P*wp2(:,j);
@@ -26,6 +33,11 @@ for i=1:nIter
        if guessError < tol
            thisInliers = thisInliers + 1;
            thisError = thisError + guessError;
+           inFeatures(end+1) = features1(j);
+           inWP(end+1) = wp(j);
+           inXY(end+1) = xy2(j) - xy1(j)
+           inSP(end+1) = sp1(j);
+           inRatioX = (xy2(1,j) - xy1(1,j))/sp1(1,j);
        end
     end
     distanceVal = thisError / thisInliers;
@@ -33,8 +45,18 @@ for i=1:nIter
         bestInliers = thisInliers;
         bestT = T;
         bestError = thisError;
+        bestFeatures = inFeatures;
+        bestSP = inSP;
+        bestWP = inWP;
+        bestXY = inXY;
     end
 end
+
+%check against stereo pair distances
+
+
+
+
 % figure;
 % hold on;
 P = K*T(1:3,:);
@@ -43,7 +65,7 @@ for i=1:size(xy1,2)
     rp = rp/rp(3);
     
 %     plot(xy2(1,i),xy2(2,i),'r*');
-    text(double(xy2(1,i)),double(xy2(2,i)),num2str(i));
+    %text(double(xy2(1,i)),double(xy2(2,i)),num2str(i));
     
 %     plot(rp(1),rp(2),'ob');
 end
